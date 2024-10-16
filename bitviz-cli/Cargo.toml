@@ -1,0 +1,11 @@
+[package]
+name = "bitviz-cli"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bitviz = { version = "0.1.0", path = "../bitviz" }
+
+[[bin]]
+name = "bitviz"
+path = "src/main.rs"
