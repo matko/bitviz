@@ -1,7 +1,8 @@
 {pkgs, mkShell}:
 mkShell {
   buildInputs = with pkgs; [
-    cargo
-    rustc
+    (rust-bin.stable.latest.default.override {
+      extensions = [ "rust-src" "rust-analyzer" ];
+    })
   ];
 }
