@@ -65,7 +65,9 @@ fn main() {
             group_padding: args.group_padding,
             line_padding: args.line_padding,
             box_size: args.box_size,
-            style: args.style,
+            style: args
+                .style
+                .map(|s| String::from_utf8(std::fs::read(s).unwrap()).unwrap()),
         },
     );
 

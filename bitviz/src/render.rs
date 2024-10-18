@@ -90,11 +90,7 @@ fn render_bit_def(name: &str, bit: bool, style: &RenderStyle) -> Group {
 
 pub fn render_bits_doc<I: Iterator<Item = bool>>(iter: I, style: &RenderStyle) -> Document {
     let (dimx, dimy, bits) = render_bits(iter, style);
-    let extra_style = style
-        .style
-        .as_ref()
-        .map(|s| String::from_utf8(std::fs::read(s).unwrap()).unwrap())
-        .unwrap_or("".to_string());
+    let extra_style = style.style.as_deref().unwrap_or("");
     Document::new()
         .set("width", dimx)
         .set("height", dimy)
