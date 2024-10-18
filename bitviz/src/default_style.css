@@ -1,0 +1,21 @@
+.background {
+    fill: white;
+}
+
+.bit-box {
+    stroke: black;
+    fill: white;
+}
+
+.bit-text {
+    fill: black;
+    text-anchor: middle;
+    font-family: monospace;
+}
+
+.bit-box.bit-box-0 {
+    fill: darkgrey;
+}
+.bit-box.bit-box-1 {
+    fill: lightgrey;
+}

@@ -1,6 +1,6 @@
 use itertools::Itertools;
 use svg::{
-    node::element::{Definitions, Group, Rectangle, Text, Use},
+    node::element::{Definitions, Group, Rectangle, Style, Text, Use},
     Document,
 };
 
@@ -64,53 +64,46 @@ pub fn render_bits<I: Iterator<Item = bool>>(
     )
 }
 
+fn render_bit_def(name: &str, bit: bool, style: &RenderStyle) -> Group {
+    let suffix = if bit { "1" } else { "0" };
+    Group::new()
+        .set("id", name)
+        .add(
+            Rectangle::new()
+                .set("class", format!("bit-box bit-box-{suffix}"))
+                .set("height", style.box_size)
+                .set("width", style.box_size)
+                .set("x", 0)
+                .set("y", 0)
+                .set("stroke-width", style.box_size as f32 / 5.0),
+        )
+        .add(
+            Text::new(suffix)
+                .set("class", format!("bit-text bit-text-{suffix}"))
+                .set("x", style.box_size / 2)
+                .set("y", style.box_size / 2)
+                .set("dy", "0.35em")
+                .set("font-size", style.box_size)
+                .set("stroke-width", style.box_size as f32 / 5.0),
+        )
+}
+
 pub fn render_bits_doc<I: Iterator<Item = bool>>(iter: I, style: &RenderStyle) -> Document {
     let (dimx, dimy, bits) = render_bits(iter, style);
     Document::new()
         .set("width", dimx)
         .set("height", dimy)
+        .add(Style::new(include_str!("default_style.css")))
         .add(
             Definitions::new()
-                .add(
-                    Group::new()
-                        .set("id", "bit0")
-                        .add(
-                            Rectangle::new()
-                                .set("height", style.box_size)
-                                .set("width", style.box_size)
-                                .set("x", 0)
-                                .set("y", 0)
-                                .set("fill", "white"),
-                        )
-                        .add(
-                            Text::new("0")
-                                .set("x", style.box_size / 2)
-                                .set("y", style.box_size / 2)
-                                .set("dy", "0.35em")
-                                .set("fill", "black")
-                                .set("font-size", style.box_size)
-                                .set("font-family", "monospace"),
-                        ),
-                )
-                .add(
-                    Group::new()
-                        .set("id", "bit1")
-                        .add(
-                            Rectangle::new()
-                                .set("height", style.box_size)
-                                .set("width", style.box_size)
-                                .set("fill", "white"),
-                        )
-                        .add(
-                            Text::new("1")
-                                .set("x", style.box_size / 2)
-                                .set("y", style.box_size / 2)
-                                .set("dy", "0.35em")
-                                .set("fill", "black")
-                                .set("font-size", style.box_size)
-                                .set("font-family", "monospace"),
-                        ),
-                ),
+                .add(render_bit_def("bit0", false, style))
+                .add(render_bit_def("bit1", true, style)),
+        )
+        .add(
+            Rectangle::new()
+                .set("width", "100%")
+                .set("height", "100%")
+                .set("class", "background"),
         )
         .add(bits)
 }
