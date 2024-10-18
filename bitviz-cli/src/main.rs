@@ -37,6 +37,9 @@ struct Command {
     #[arg(long, default_value_t = 10)]
     box_size: usize,
 
+    #[arg(long)]
+    style: Option<String>,
+
     #[arg(short, long)]
     output: Option<String>,
 }
@@ -62,6 +65,7 @@ fn main() {
             group_padding: args.group_padding,
             line_padding: args.line_padding,
             box_size: args.box_size,
+            style: args.style,
         },
     );
 

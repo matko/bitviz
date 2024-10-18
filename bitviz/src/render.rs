@@ -10,6 +10,7 @@ pub struct RenderStyle {
     pub group_padding: usize,
     pub line_padding: usize,
     pub box_size: usize,
+    pub style: Option<String>,
 }
 
 pub fn render_bits<I: Iterator<Item = bool>>(
@@ -83,17 +84,22 @@ fn render_bit_def(name: &str, bit: bool, style: &RenderStyle) -> Group {
                 .set("x", style.box_size / 2)
                 .set("y", style.box_size / 2)
                 .set("dy", "0.35em")
-                .set("font-size", style.box_size)
-                .set("stroke-width", style.box_size as f32 / 5.0),
+                .set("font-size", style.box_size),
         )
 }
 
 pub fn render_bits_doc<I: Iterator<Item = bool>>(iter: I, style: &RenderStyle) -> Document {
     let (dimx, dimy, bits) = render_bits(iter, style);
+    let extra_style = style
+        .style
+        .as_ref()
+        .map(|s| String::from_utf8(std::fs::read(s).unwrap()).unwrap())
+        .unwrap_or("".to_string());
     Document::new()
         .set("width", dimx)
         .set("height", dimy)
         .add(Style::new(include_str!("default_style.css")))
+        .add(Style::new(extra_style))
         .add(
             Definitions::new()
                 .add(render_bit_def("bit0", false, style))
