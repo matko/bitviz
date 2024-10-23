@@ -8,12 +8,21 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
+    crane = {
+      url = "github:ipetkov/crane";
+    };
   };
 
-  outputs = { self, nixpkgs, flake-utils, rust-overlay }:
+  outputs = { self, nixpkgs, flake-utils, rust-overlay, crane }:
     flake-utils.lib.eachDefaultSystem (system:
-      let pkgs = (import nixpkgs) { inherit system; overlays = [(import rust-overlay)]; }; in
+      let pkgs = (import nixpkgs) { inherit system; overlays = [(import rust-overlay)
+                                                                (final: prev: {
+                                                                  craneLib = (crane.mkLib prev).overrideToolchain final.rust-bin.nightly.latest.minimal;
+                                                                })
+                                                               ];
+                                  }; in
       {
+        packages.default = pkgs.callPackage ./package.nix {};
         devShells.default = pkgs.callPackage ./shell.nix {};
       });
 }
