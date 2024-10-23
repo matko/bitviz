@@ -17,7 +17,7 @@
     flake-utils.lib.eachDefaultSystem (system:
       let pkgs = (import nixpkgs) { inherit system; overlays = [(import rust-overlay)
                                                                 (final: prev: {
-                                                                  craneLib = (crane.mkLib prev).overrideToolchain final.rust-bin.nightly.latest.minimal;
+                                                                  craneLib = (crane.mkLib prev).overrideToolchain final.rust-bin.stable.latest.minimal;
                                                                 })
                                                                ];
                                   }; in
